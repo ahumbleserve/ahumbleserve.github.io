@@ -1,0 +1,93 @@
+<html ng-app="documentos">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<meta charset="UTF-8">
+	<title>Gestão de Documentos</title>
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" />
+	<link href="style.css" rel="stylesheet" />
+	<link href="css/style.css" rel="stylesheet" />
+
+	<script src="lib/angular/angular.js"> </script>
+	<script src="js/app.js"> </script>
+	<script src="js/controllers/documentosCtrl.js"> </script>
+	<script src="js/controllers/userCtrl.js"> </script>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body ng-controller="documentosCtrl">
+	
+
+	<div>
+		<nav class="{{active}} btn-danger" ng-click="$event.preventDefault()">
+			<a href="#" class="home btn-danger" ng-click="active='home'">My Documents</a>
+			<a href="#" class="about btn-danger" ng-click="active='about'">Shares</a>
+			<a href="#" class="contact btn-danger" ng-click="switchUser()">Switch User</a>
+		</nav>
+	</div>
+	<h5>{{'Welcome, '+loggedUser}}</h5>
+			
+	<!-- Documents -->
+	<div ng-hide="!(active == 'home')">
+		<div class="jumbotron">
+			
+			<h3>{{app}}</h3>
+			<input class="form-control" type="text" ng-model="searchFilter" placeholder="Search Filter">
+			<div class="bs-example" id="alert">
+    			
+			</div>
+			<div class="pre-scrollable">
+				<table class="table">
+					<tr>
+						<th></th>
+						<th>Preview</th>
+						<th>Details</th>
+					</tr>
+					<tr ng-class="{'selecionado negrito': doc.selecionado}" ng-repeat="doc in documentos | filter:searchFilter">
+						<td><input type="checkbox" ng-model="doc.selecionado"/></td>
+						<td><img src=".{{doc.img}}" width="100"/></td>
+						<td>{{doc.name}}<br> {{'('+doc.desc+')'}} <br> {{'Tags: ['+doc.tags+']'}}</td>
+					</tr>
+				</table>
+			</div>
+			<div ng-hide="!isDocumentoSelecionado(documentos)">
+				<form name="documentoForm">
+					<input class="form-control" type="text" ng-required="true" name="hash" ng-model="hash" placeholder="Hash ID" ng-minlength="6"/>
+					<div ng-show="documentoForm.hash.$invalid && documentoForm.hash.$dirty" class="alert alert-danger"> The hash ID must be 6 characters of length at least</div>
+			
+					<button class="btn btn-primary btn-block" ng-disabled="documentoForm.$invalid" ng-click="compartilharDocumento(documentos)">Compartilhar</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Shares -->
+	<div ng-hide="!(active == 'about')">
+		<div class="jumbotron">
+			
+			<h3>{{app2}}</h3>
+			<div class="pre-scrollable">
+				<table class="table">
+					<tr>
+						<th>Preview</th>
+						<th>Actions</th>
+					</tr>
+					<tr ng-repeat="doc in receives | filter:searchFilter">
+						<td><img src=".{{doc.img}}" width="100"/></td>
+						<td>
+							<button class="btn btn-primary btn-block" ng-click="accept(doc)">Accept</button>
+							<button class="btn btn-danger btn-block"  ng-click="reject(doc)">Reject</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

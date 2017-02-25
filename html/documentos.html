@@ -1,0 +1,31 @@
+<div class="jumbotron">
+			
+			
+			<h3>{{app}}</h3>
+			<input class="form-control" type="text" ng-model="searchFilter" placeholder="Search Filter">
+			<div class="bs-example" id="alert">
+    			
+			</div>
+			<div class="pre-scrollable">
+				<table class="table">
+					<tr>
+						<th></th>
+						<th>Preview</th>
+						<th>Details</th>
+					</tr>
+					<tr ng-class="{'selecionado negrito': doc.selecionado}" ng-repeat="doc in documentos | filter:searchFilter">
+						<td><input type="checkbox" ng-model="doc.selecionado"/></td>
+						<td><img src=".{{doc.img}}" width="100"/></td>
+						<td>{{doc.name}}<br> {{'('+doc.desc+')'}} <br> {{'Tags: ['+doc.tags+']'}}</td>
+					</tr>
+				</table>
+			</div>
+			<div ng-hide="!isDocumentoSelecionado(documentos)">
+				<form name="documentoForm">
+					<input class="form-control" type="text" ng-required="true" name="hash" ng-model="hash" placeholder="Hash ID" ng-minlength="6"/>
+					<div ng-show="documentoForm.hash.$invalid && documentoForm.hash.$dirty" class="alert alert-danger"> The hash ID must be 6 characters of length at least</div>
+			
+					<button class="btn btn-primary btn-block" ng-disabled="documentoForm.$invalid" ng-click="compartilharDocumento(documentos)">Compartilhar</button>
+				</form>
+			</div>
+		</div>
